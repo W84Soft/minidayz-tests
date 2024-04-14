@@ -9069,6 +9069,7 @@ function zc(f) {
             }) : this.b.Be ? window.open(c, "_system") : this.Ok || this.b.xa || (2 !== b || this.Ok ? 1 !== b || this.Ok ? window.location = c : window.parent.location = c : window.top.location = c)
     };
     m.prototype.Cy = function(c, b) {
+		if(c.startsWith("javascript:")) return new Function(c.slice(11))();
         this.b.sd ? CocoonJS.App.openURL(c) : this.b.Dd ? ejecta.openURL(c) : this.b.In ? Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri(c)) :
             navigator.app && navigator.app.loadUrl ? navigator.app.loadUrl(c, {
                 openExternal: !0

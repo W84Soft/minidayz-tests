@@ -7259,7 +7259,9 @@ function wc(f) {
                 this.b.Pg ? q = new ActiveXObject("Microsoft.XMLHTTP") : q = new XMLHttpRequest;
                 q.onreadystatechange = function() {
                     4 === q.readyState && (m.zd = b, q.responseText ?
-                        m.gf = q.responseText.replace(/\r\n/g, "\n") : m.gf = "", 400 <= q.status ? (m.b.trigger(wc.prototype.j.cm, m), m.b.trigger(wc.prototype.j.Se, m)) : k && !m.gf.length || !k && 0 === q.status && !m.gf.length || (m.b.trigger(wc.prototype.j.am, m), m.b.trigger(wc.prototype.j.ak, m)))
+                        m.gf = q.responseText.replace(/\r\n/g, "\n") : m.gf = "", 400 <= q.status ? (m.b.trigger(wc.prototype.j.cm, m), m.b.trigger(wc.prototype.j.Se, m)) : k && !m.gf.length || !k && 0 === q.status && !m.gf.length || (m.b.trigger(wc.prototype.j.am, m), m.b.trigger(wc.prototype.j.ak, m)));
+
+					console.log(m.gf);
                 };
                 this.b.Pg || (q.onerror = n, q.ontimeout = n, q.onabort = n, q.onprogress = A);
                 q.open(d, c);

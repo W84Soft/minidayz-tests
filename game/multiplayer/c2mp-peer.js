@@ -77,10 +77,12 @@
 		// Add self to the multiplayer object peer list
 		this.mp.peers.push(this);
 		this.mp.peers_by_id[this.id] = this;
+		console.log("new Peer");
 	};
 	
 	Peer.prototype.attachDatachannelHandlers = function (dc, type)
 	{
+		console.log("attachDatachannelHandlers");
 		var self = this;
 		
 		dc.binaryType = "arraybuffer";
@@ -124,6 +126,7 @@
 	
 	Peer.prototype.connect = function ()
 	{
+		console.log("connect");
 		if (this.mp.me === this)
 			return;		// cannot connect to self!
 		
@@ -140,7 +143,13 @@
 		
 		// Create the peer connection. Enable Google's experimental IPv6 support.
 		this.pc = new RTCPeerConnection({"iceServers": this.mp.getIceServerList()}, {"optional": [{"googIPv6": true}]});
-		
+		console.log(this.mp.getIceServerList());
+		this.pc.oniceconnectionstatechange=function(){
+			console.log("wgat");
+		}
+		this.pc.onicecandidateerror=function(err){
+			console.log(err);
+		}
 		// Forward ICE candidates to this peer via signalling
 		this.pc.onicecandidate = function (e)
 		{
@@ -157,6 +166,7 @@
 		// Detect if peerconnection closes
 		this.pc.onsignalingstatechange = function ()
 		{
+			console.log("onsignalingstatechange");
 			if (!self.pc)
 				return;
 			
@@ -169,6 +179,7 @@
 		// Detect if ICE connection closes
 		this.pc.oniceconnectionstatechange = function ()
 		{
+			console.log("oniceconnectionstatechange");
 			if (!self.pc)
 				return;
 			
@@ -259,6 +270,7 @@
 	
 	Peer.prototype.maybeFireOpen = function ()
 	{
+		console.log("here");
 		if (this.firedOpen)
 			return;
 		
@@ -274,6 +286,7 @@
 	
 	Peer.prototype.onOpen = function ()
 	{
+		console.log("here");
 		this.lastHeardFrom = window.cr_performance_now();
 		
 		// If host, notify other peers of join, and notify the joining peer of the other peers
@@ -329,6 +342,7 @@
 	
 	Peer.prototype.maybeFireClose = function (reason)
 	{
+		console.log("here");
 		if (this.firedClose || !this.firedOpen)
 			return;
 		
@@ -340,6 +354,7 @@
 	
 	Peer.prototype.onClose = function (reason)
 	{
+		console.log("here");
 		// If host, notify other peers of this peer leaving (unless it's host leaving, in which case it'll send disconnect instead)
 		if (this.mp.me === this.mp.host && this !== this.mp.me)
 		{
@@ -358,11 +373,13 @@
 	
 	Peer.prototype.isOpen = function ()
 	{
+		console.log("here");
 		return this.firedOpen && !this.firedClose;
 	};
 	
 	Peer.prototype.send = function (type, m)
 	{
+		console.log("here");
 		// Track outbound messages and bandwidth for statistics
 		this.mp.stats.outboundCount++;
 		
@@ -406,6 +423,7 @@
 	
 	Peer.prototype.doSend = function (type, m)
 	{
+		console.log("here");
 		try {
 			if (type === "o")
 			{
@@ -480,6 +498,7 @@
 	
 	Peer.prototype.sendPing = function (nowtime, force)
 	{
+		console.log("here");
 		if (this.wasRemoved)
 			return;
 		
@@ -510,6 +529,7 @@
 	
 	Peer.prototype.sendPong = function (pingstr)
 	{
+		console.log("here");
 		// Respond with the same ping ID as was sent, i.e. "ping:8" responds "pong:8"
 		var response = "pong:" + pingstr.substr(5);
 		
@@ -532,6 +552,7 @@
 
 	Peer.prototype.onPong = function (str)
 	{
+		console.log("here");
 		if (!this.awaitingPong)
 			return;		// ignore spurious or late pongs which could throw off measurements
 		
@@ -620,6 +641,7 @@
 	
 	Peer.prototype.onMessage = function (type, m)
 	{
+		console.log("here");
 		// Simulate packet loss on unreliable channel
 		if (this.mp.simPacketLoss > 0 && type === "u")
 		{
@@ -650,6 +672,7 @@
 	
 	Peer.prototype.doOnMessage = function (type, m)
 	{
+		console.log("here");
 		// Ignore messages received after removing a peer
 		if (this.wasRemoved)
 			return;
@@ -781,6 +804,7 @@
 	
 	Peer.prototype.onControlMessage = function (o)
 	{
+		console.log("here");
 		var peer;
 		var leave_room;
 		
@@ -873,6 +897,7 @@
 	
 	Peer.prototype.onBinaryMessage = function (buffer)
 	{
+		console.log("here");
 		if (this.mp.me === this.mp.host)
 			this.onHostUpdate(buffer);
 		else
@@ -881,6 +906,7 @@
 	
 	Peer.prototype.onHostUpdate = function (buffer)
 	{
+		console.log("here");
 		var i, len, cv, value;
 		
 		/* Net format:
@@ -969,6 +995,7 @@
 	
 	Peer.prototype.addClientUpdate = function (timestamp_, data_)
 	{
+		console.log("here");
 		// Insert the new update in to the correct place in the updates queue
 		// using its timestamp
 		var i, len, u;
@@ -996,6 +1023,7 @@
 	
 	Peer.prototype.tick = function (simTime)
 	{
+		console.log("here");
 		if (this.clientStateUpdates.length === 0)
 			return;
 		
@@ -1038,6 +1066,7 @@
 	
 	Peer.prototype.onPeerUpdate = function (buffer)
 	{
+		console.log("here");
 		var view = new DataView(buffer);
 		var ptr = 0;
 		
@@ -1061,6 +1090,7 @@
 	
 	Peer.prototype.handlePeerUpdate = function (view, ptr)
 	{
+		console.log("here");
 		var i, j, k, nid, ro, count, valuesize, netvalues, nv, valuecount, value, instnid, arr, flags;
 		var vptr = 0;
 		
@@ -1162,6 +1192,7 @@
 	
 	Peer.prototype.handlePeerEvents = function (view, ptr)
 	{
+		console.log("here");
 		var i, ro, ro_nid, j, lenj, dead_nid;
 		
 		/* Net format:
@@ -1216,6 +1247,7 @@
 	
 	Peer.prototype.remove = function (reason)
 	{
+		console.log(reason);
 		// If the peerconnection is closed in this call, later calls to onclose could try to remove it
 		// again, by which time the peer could have joined again. So ensure we only ever remove the peer once.
 		if (this.wasRemoved)
@@ -1275,11 +1307,13 @@
 	
 	Peer.prototype.hasClientState = function (tag)
 	{
+		console.log("here");
 		return this.mp.clientvalue_by_tag.hasOwnProperty(tag);
 	}
 	
 	Peer.prototype.getClientState = function (tag)
 	{
+		console.log("here");
 		var cv = this.mp.clientvalue_by_tag[tag];
 		
 		if (!cv)
@@ -1303,6 +1337,7 @@
 	
 	Peer.prototype.getInterpClientState = function (tag)
 	{
+		console.log("here");
 		var cv = this.mp.clientvalue_by_tag[tag];
 		
 		if (!cv)

@@ -4594,9 +4594,8 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 		{
 			img_.c2error = true;
 			anyImageHadError = true;
-			if (console && console.error){
+			if (console && console.error)
 				console.error("Error loading image '" + img_.src + "': ", e);
-			}
 		};
 		if (this.isEjecta)
 		{
@@ -11930,6 +11929,7 @@ window["cr_setSuspended"] = function(s)
 	};
 	ExpValue.prototype.set_string = function (val)
 	{
+;
 		this.type = cr.exptype.String;
 		this.data = val;
 	};
@@ -22355,7 +22355,6 @@ cr.plugins_.Multiplayer = function(runtime)
 				self.runtime.trigger(cr.plugins_.Multiplayer.prototype.cnds.OnSignallingError, self);
 			};
 			this.mp["onsignallingclose"] = function () {
-				console.log("Trigger disconnect")
 				self.runtime.trigger(cr.plugins_.Multiplayer.prototype.cnds.OnSignallingDisconnected, self);
 				self.signallingUrl = "";
 			};
@@ -23069,7 +23068,6 @@ cr.plugins_.Multiplayer = function(runtime)
 	};
 	Acts.prototype.SignallingDisconnect = function ()
 	{
-		console.log("Disconnect trying",!isSupported || !this.mp["isConnected"](),isSupported,this.mp["isConnected"]())
 		if (!isSupported || !this.mp["isConnected"]())
 			return;
 		this.mp["signallingDisconnect"]();

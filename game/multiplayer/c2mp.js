@@ -22,7 +22,8 @@
 		{ "urls": "stun:stun2.l.google.com:19302" },
 		{ "urls": "stun:stun3.l.google.com:19302" },
 		{ "urls": "stun:stun4.l.google.com:19302" },
-		{ "urls": "stun:23.21.150.121" }		// mozilla-operated server
+		{ "urls": "stun:localhost" },
+		{ "urls": "stun:23.21.150.121" },		// mozilla-operated server
 	];
 	
 	window["C2Multiplayer_IsSupported"] = function ()
@@ -308,7 +309,7 @@
 			{
 				if (self.onsignallingerror)
 					self.onsignallingerror("server does not support '" + SIGNALLING_WEBSOCKET_PROTOCOL + "' protocol");
-
+				
 				self.sigws.close(1002, "'" + SIGNALLING_WEBSOCKET_PROTOCOL + "' protocol required");
 				self.sigws = null;
 				self.signalling_connected = false;
@@ -347,9 +348,9 @@
 	
 	C2Multiplayer.prototype.signallingDisconnect = function ()
 	{
-		console.log(new Error().stack);
 		if (!this.sigws || !this.signalling_connected)
 			return;
+		
 		this.sigws.close();
 		this.sigws = null;
 		this.signalling_connected = false;
@@ -358,7 +359,7 @@
 	C2Multiplayer.prototype.onSignallingMessage = function (m)
 	{
 		var o;
-		console.log(m.data);
+		
 		try {
 			o = JSON.parse(m.data);
 		}
@@ -367,7 +368,6 @@
 				this.onsignallingerror(e);
 			return;
 		}
-		
 		switch (o.message) {
 		case "welcome":
 			this.onSignallingReceiveWelcome(o);
@@ -540,7 +540,7 @@
 		this.room = o.room;
 		
 		this.me = new Peer(this, this.myid, this.myalias);
-		
+		console.log(this.me);
 		// Local client was assigned host
 		if (o.host)
 		{
@@ -787,10 +787,10 @@
 	
 	C2Multiplayer.prototype.disconnectRoom = function (signalling_leave_room)
 	{
+		console.log(signalling_leave_room);
 		this.lastTimeDiffs.length = 0;
 		this.targetHostTimeDiff = 0;
 		this.hostTimeDiff = 0;
-		
 		this.removeAllPeers("disconnect");
 		
 		if (signalling_leave_room)
@@ -801,6 +801,7 @@
 	
 	C2Multiplayer.prototype.removeAllPeers = function (reason)
 	{
+		console.log(reason);
 		// Prevent recursion since removing key peers will also call removeAllPeers()
 		if (isRemovingAllPeers)
 			return;

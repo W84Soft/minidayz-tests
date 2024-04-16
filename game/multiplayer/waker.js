@@ -5,6 +5,7 @@ var timer_running = false;
 
 function startTimer()
 {
+	console.log(timer_running);
 	if (timer_running)
 		return;
 	

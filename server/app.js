@@ -27,8 +27,8 @@ app.use("/api",router.api);
 
 
 const server=http.createServer(app);
-server.listen(8099,function(){
-	console.log(`App listening on port 8099!`);
+server.listen(80,function(){
+	console.log(`App listening on port 80!`);
 });
 
 export const socket=new WebSocketServer({server:server});

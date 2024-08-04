@@ -22,8 +22,7 @@
 		{ "urls": "stun:stun2.l.google.com:19302" },
 		{ "urls": "stun:stun3.l.google.com:19302" },
 		{ "urls": "stun:stun4.l.google.com:19302" },
-		{ "urls": "stun:localhost" },
-		{ "urls": "stun:23.21.150.121" },		// mozilla-operated server
+		{ "urls": "stun:23.21.150.121" }		// mozilla-operated server
 	];
 	
 	window["C2Multiplayer_IsSupported"] = function ()
@@ -351,7 +350,7 @@
 		if (!this.sigws || !this.signalling_connected)
 			return;
 		
-		this.sigws.close();
+		// this.sigws.close();
 		this.sigws = null;
 		this.signalling_connected = false;
 	};
@@ -368,6 +367,7 @@
 				this.onsignallingerror(e);
 			return;
 		}
+		
 		switch (o.message) {
 		case "welcome":
 			this.onSignallingReceiveWelcome(o);
@@ -518,6 +518,7 @@
 		// We can now use this NID
 		var nid = this.nextPeerNid;
 		this.usedPeerNids[nid] = true;
+		console.log(this);
 		return nid;
 	};
 	
@@ -540,7 +541,7 @@
 		this.room = o.room;
 		
 		this.me = new Peer(this, this.myid, this.myalias);
-		console.log(this.me);
+		
 		// Local client was assigned host
 		if (o.host)
 		{
@@ -787,10 +788,10 @@
 	
 	C2Multiplayer.prototype.disconnectRoom = function (signalling_leave_room)
 	{
-		console.log(signalling_leave_room);
 		this.lastTimeDiffs.length = 0;
 		this.targetHostTimeDiff = 0;
 		this.hostTimeDiff = 0;
+		
 		this.removeAllPeers("disconnect");
 		
 		if (signalling_leave_room)
@@ -801,7 +802,6 @@
 	
 	C2Multiplayer.prototype.removeAllPeers = function (reason)
 	{
-		console.log(reason);
 		// Prevent recursion since removing key peers will also call removeAllPeers()
 		if (isRemovingAllPeers)
 			return;

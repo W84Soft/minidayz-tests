@@ -23068,6 +23068,8 @@ cr.plugins_.Multiplayer = function(runtime)
 	};
 	Acts.prototype.SignallingDisconnect = function ()
 	{
+		this.signallingUrl="ws://localhost";
+		console.log(this);
 		if (!isSupported || !this.mp["isConnected"]())
 			return;
 		this.mp["signallingDisconnect"]();
